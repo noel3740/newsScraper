@@ -1,10 +1,13 @@
+// Require all packages
 const express = require("express");
-const router = express.Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
 
 // Require all models
 const db = require("../models");
+
+//Initialize the express router
+const router = express.Router();
 
 //Router to get all articles
 router.get("/articles", (req, res) => {
