@@ -21,6 +21,8 @@ mongoose.connect(MONGODB_URI);
 //require express routes
 const apiRoutes = require("./controllers/apiController");
 app.use("/api", apiRoutes);
+const htmlRoutes = require("./controllers/htmlController");
+app.use("/", htmlRoutes);
 
 // Start the server
 app.listen(PORT, function () {
