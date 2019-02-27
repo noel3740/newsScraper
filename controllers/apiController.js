@@ -9,9 +9,11 @@ const db = require("../models");
 //Initialize the express router
 const router = express.Router();
 
-//Router to get all articles
+//Router to get top 20 articles
 router.get("/articles", (req, res) => {
     db.Article.find()
+        .sort({"createdAt": -1})
+        .limit(20)
         .then(dbArticles => {
             res.json(dbArticles);
         })
@@ -92,7 +94,6 @@ router.get("/scrape", (req, res) => {
     axios.get(websiteToScrape).then(axiosResponse => {
         //Parse data returned from axios using cherrio
         var $ = cheerio.load(axiosResponse.data);
-        var articles = [];
 
         $(".trb_outfit_group_list_item").each((i, element) => {
             var article = {};
@@ -101,17 +102,18 @@ router.get("/scrape", (req, res) => {
             article.link = `https://www.chicagotribune.com${$(element).children("section").children("h3").children("a").attr("href")}`;
             article.imageUrl = $(element).children("a").children("img").attr("data-baseurl");
             article.text = $(element).children("section").children(".trb_outfit_group_list_item_brief").text();
-            articles.push(article);
+
+            db.Article.findOneAndUpdate(
+                { title: article.title }, 
+                article,
+                {upsert: true, new: true, runValidators: true})
+                .catch(error => {
+                    console.log(error);
+                    return res.status(500).send("Unable to insert article to database.");
+                });
         });
 
-        db.Article.insertMany(articles)
-            .then(() => {
-                res.send("Scrape Complete");
-            })
-            .catch(error => {
-                console.log(error);
-                res.status(500).send("Unable to insert articles to database.");
-            });
+        res.send("Scrape Complete");            
     });
 });
 
