@@ -6,6 +6,10 @@ var Schema = mongoose.Schema;
 // Using the Schema constructor, create a new NoteSchema object
 var NoteSchema = new Schema({
     text: String,
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 // This creates our model from the above schema, using mongoose's model method
