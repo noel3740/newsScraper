@@ -1,5 +1,10 @@
 $(document).ready(function () {
 
+    //Attach on click event to view notes button
+    $(document).on("click", ".viewNotesButton", function() {
+        $("#notesModal").modal("show");
+    });
+
     function createArticleCards() {
         $(".articlesDiv").empty();
 
@@ -27,7 +32,7 @@ $(document).ready(function () {
                                         </h3>
                                         <p class="card-text">${article.text}</p>
                                         <div class="articleButtonDiv">
-                                            <button class="btn btn-primary float-right">View Notes</button>
+                                            <button data-article-id="${article._id}" class="btn btn-primary float-right viewNotesButton">View Notes</button>
                                         </div>
                                     </div>
                                 </div>
