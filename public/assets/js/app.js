@@ -48,7 +48,6 @@ $(document).ready(function () {
         $("#addNoteButton").prop("disabled", false);
 
         var notesModal = $("#notesModal");
-        console.log(articleId);
 
         $.ajax({
             type: "GET",
@@ -57,8 +56,6 @@ $(document).ready(function () {
 
                 var notesContainer = notesModal.find(".modal-body");
                 notesContainer.empty();
-
-                console.log(article);
 
                 article.notes.forEach(function (note, index) {
 
@@ -109,16 +106,11 @@ $(document).ready(function () {
             text: $(`.noteTextArea[data-note-id=${noteId}]`).val()
         };
 
-        console.log(note);
-        console.log(httpMethod);
-        console.log(apiUrl);
-
         $.ajax({
             type: httpMethod,
             url: apiUrl,
             data: note,
             success: function (response) {
-                console.log(response);
                 displayMessage("Successful update/insert of note!");
                 populateNotes(articleId);
             },
@@ -139,8 +131,7 @@ $(document).ready(function () {
         $.ajax({
             type: "DELETE",
             url: `/api/notes/${noteId}`,
-            success: function (response) {
-                console.log(response);
+            success: function () {
                 displayMessage("Successful deletion of note!");
 
                 //Slowly remove the note with animation
