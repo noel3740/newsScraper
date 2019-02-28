@@ -12,7 +12,7 @@ const router = express.Router();
 //Router to get top 20 articles
 router.get("/articles", (req, res) => {
     db.Article.find()
-        .sort({"createdAt": -1})
+        .sort({ "createdAt": -1 })
         .limit(20)
         .then(dbArticles => {
             res.json(dbArticles);
@@ -64,7 +64,7 @@ router.post("/articles/:id/notes", (req, res) => {
 
 //Router to delete an article
 router.delete("/articles/:id", (req, res) => {
-    db.Article.deleteOne({_id: req.params.id})
+    db.Article.deleteOne({ _id: req.params.id })
         .then(result => {
             res.json(result);
         })
@@ -76,13 +76,31 @@ router.delete("/articles/:id", (req, res) => {
 
 //Router to delete a note.
 router.delete("/notes/:id", (req, res) => {
-    db.Note.deleteOne({_id: req.params.id})
+    db.Note.deleteOne({ _id: req.params.id })
         .then(result => {
             res.json(result);
         })
         .catch(error => {
             console.log(error);
             res.status(500).send("Error deleting note from the database.");
+        });
+});
+
+//Router to update a note
+router.put("/notes/:id", (req, res) => {
+    // Create a new note and pass the req.body to the entry
+    const updatedNote = {
+        text: req.body.text
+    };
+
+    db.Note.updateOne({ _id: req.params.id}, { $set: updatedNote })
+        .then(result => {
+            console.log(result);
+            res.end();
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).send("Error updating note in the database.");
         });
 });
 
@@ -104,16 +122,16 @@ router.get("/scrape", (req, res) => {
             article.text = $(element).children("section").children(".trb_outfit_group_list_item_brief").text();
 
             db.Article.findOneAndUpdate(
-                { title: article.title }, 
+                { title: article.title },
                 article,
-                {upsert: true, new: true, runValidators: true})
+                { upsert: true, new: true, runValidators: true })
                 .catch(error => {
                     console.log(error);
                     return res.status(500).send("Unable to insert article to database.");
                 });
         });
 
-        res.send("Scrape Complete");            
+        res.send("Scrape Complete");
     });
 });
 
