@@ -30,7 +30,7 @@ const insertAllArticlesPromise = articles => {
         });
     });
 
-}
+};
 
 router.get("/", (req, res) => {
     //Get website data using axios
