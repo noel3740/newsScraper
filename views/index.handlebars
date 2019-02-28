@@ -1,0 +1,55 @@
+<header class="jumbotron text-center text-white newsScraperHeader">
+    <h1 class="display-3 tribuneFont">Chicago Tribune</span> News Scraper</h1>
+    <hr>
+    <h2 class="mb-4">A news scaper that will grab the 20 most recent news articles from the Chicago Tribune.</h2>
+</header>
+
+<main class="container">
+    <div class="row articlesDiv p-3">
+        {{#each articles}}
+        <div class="col-12">
+            <div class="card articleCard">
+                <div class="row">
+                    <div class="col-lg-3 col-md-12 mt-4">
+                        <img src="{{this.imageUrl}}" alt="...">
+                    </div>
+                    <div class="col-lg-9 col-md-12">
+                        <div class="card-body">
+                            <h3><a href="{{this.link}}" target="_blank">{{this.title}}</a>
+                            </h3>
+                            <p class="card-text">{{this.text}}</p>
+                            <div class="articleButtonDiv">
+                                <button data-article-id="{{this._id}}"
+                                    class="btn btn-primary float-right viewNotesButton">View Notes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{#unless @last}}
+        <hr class="w-100">
+        {{/unless}}
+        {{/each}}
+    </div>
+</main>
+
+<!--Notes Popup-->
+<section class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Article Notes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger">Add</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</section>
