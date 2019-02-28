@@ -21,7 +21,7 @@
       top: 0;
       left: 0;
       right: 0;
-      z-index: 1000;
+      z-index: 2000;
   }
 
   .tribuneFont {
@@ -59,4 +59,21 @@
 
   .articleButtonDiv {
       height: 38px;
+  }
+
+  .notesBody {
+    height: 300px;
+    overflow: auto;
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  .editNoteContainer {
+    width: calc(100% - 100px);
+  }
+
+  .noteButtonsContainer {
+      width: 100px;
   }

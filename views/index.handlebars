@@ -36,18 +36,18 @@
 
 <!--Notes Popup-->
 <section class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+    aria-hidden="true" data-article-id="">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-0">
                 <h5 class="modal-title" id="exampleModalLabel">Article Notes</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger">Add</button>
+            <div class="notesBody modal-body px-0 border-top border-bottom"></div>
+            <div class="modal-footer border-0">
+                <button id="addNoteButton" type="button" class="btn btn-danger"><i class="fas fa-plus"></i> Add</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
