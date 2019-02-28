@@ -1,6 +1,7 @@
 //Require dependencies
 const express = require("express");
 const mongoose = require("mongoose");
+const exphbs = require("express-handlebars");
 
 //Get the server port
 const PORT = process.env.PORT || 3000;
@@ -11,8 +12,13 @@ var app = express();
 //Use url encode and json middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 // Make public a static folder
 app.use(express.static("public"));
+
+//Set handlebars as the view engine
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
 //Connect to mongo db
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/newsScraper";
