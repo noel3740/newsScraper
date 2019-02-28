@@ -48,6 +48,7 @@ router.get("/", (req, res) => {
             article.link = `https://www.chicagotribune.com${$(element).children("section").children("h3").children("a").attr("href")}`;
             article.imageUrl = $(element).children("a").children("img").attr("data-baseurl");
             article.text = $(element).children("section").children(".trb_outfit_group_list_item_brief").text();
+            article.createdAt = new Date();
 
             articles.push(article);
         });
@@ -57,7 +58,7 @@ router.get("/", (req, res) => {
             .then(() => {
                 //Find top 20 articles and render to screen using handlebars
                 db.Article.find()
-                    .sort({ "createdAt": -1 })
+                    .sort({ createdAt: -1 })
                     .limit(20)
                     .then(dbArticles => {
 

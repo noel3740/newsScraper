@@ -12,8 +12,6 @@ const router = express.Router();
 //Router to get top 20 articles
 router.get("/articles", (req, res) => {
     db.Article.find()
-        .sort({ "createdAt": -1 })
-        .limit(20)
         .then(dbArticles => {
             res.json(dbArticles);
         })
