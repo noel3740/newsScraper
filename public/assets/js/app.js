@@ -110,7 +110,7 @@ $(document).ready(function () {
             type: httpMethod,
             url: apiUrl,
             data: note,
-            success: function (response) {
+            success: function () {
                 displayMessage("Successful update/insert of note!");
                 populateNotes(articleId);
             },
