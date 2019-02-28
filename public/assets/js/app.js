@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         setTimeout(() => {
             alertDiv.slideUp("slow");
-        }, 2000);
+        }, 3000);
     }
 
     //Function that creates the div that contains a specific note
@@ -34,6 +34,7 @@ $(document).ready(function () {
                     </div>
                     <div class="mr-2">
                         <button data-note-id=${note._id} class="noteDeleteBtn btn btn-secondary btn-block ${note._id !== -1 ? "" : "d-none"}"><i class="fas fa-times"></i> Delete</button>
+                        <button data-note-id=${note._id} class="noteCancel btn btn-secondary btn-block ${note._id !== -1 ? "d-none" : ""}">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -45,7 +46,7 @@ $(document).ready(function () {
     function populateNotes(articleId) {
         //Enable the add button
         $("#addNoteButton").prop("disabled", false);
-        
+
         var notesModal = $("#notesModal");
         console.log(articleId);
 
@@ -174,6 +175,12 @@ $(document).ready(function () {
 
         //Scroll to the bottom of the notes container
         notesContainer.animate({ scrollTop: $(document).height() }, "slow");
+    });
+
+    //On click event for the cancel add note button
+    $(document).on("click", ".noteCancel", function() {
+        var articleId = $("#notesModal").data("article-id");
+        populateNotes(articleId);
     });
 
 });
