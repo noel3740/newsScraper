@@ -2,7 +2,6 @@
 const express = require("express");
 const axios = require("axios");
 const cheerio = require("cheerio");
-//const path = require("path");
 
 // Require all models
 const db = require("../models");
@@ -56,22 +55,7 @@ router.get("/", (req, res) => {
         //Insert all the articles in the database and insert if duplicate does not exist
         insertAllArticlesPromise(articles)
             .then(() => {
-                //Find top 20 articles and render to screen using handlebars
-                db.Article.find()
-                    .sort({ createdAt: -1 })
-                    .limit(20)
-                    .then(dbArticles => {
-
-                        const handleBarsObject = {
-                            articles: dbArticles
-                        };
-
-                        res.render("index", handleBarsObject);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                        res.status(404).send("Error finding articles from the database.");
-                    });
+                res.render("index");
             })
             .catch(error => {
                 console.log(error);
@@ -79,8 +63,6 @@ router.get("/", (req, res) => {
             });
 
     });
-    //res.sendFile(path.join(__dirname, "../public/index.html"));
-
 });
 
 module.exports = router;
