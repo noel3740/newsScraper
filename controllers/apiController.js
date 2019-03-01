@@ -1,7 +1,5 @@
 // Require all packages
 const express = require("express");
-const axios = require("axios");
-const cheerio = require("cheerio");
 
 // Require all models
 const db = require("../models");
@@ -101,38 +99,5 @@ router.put("/notes/:id", (req, res) => {
             res.status(500).send("Error updating note in the database.");
         });
 });
-
-//Router to scrape articles and save them to the database. 
-router.get("/scrape", (req, res) => {
-
-    //Get website data using axios
-    const websiteToScrape = "https://www.chicagotribune.com/news/";
-    axios.get(websiteToScrape).then(axiosResponse => {
-        //Parse data returned from axios using cherrio
-        var $ = cheerio.load(axiosResponse.data);
-
-        $(".trb_outfit_group_list_item").each((i, element) => {
-            var article = {};
-
-            article.title = $(element).children("section").children("h3").children("a").text();
-            article.link = `https://www.chicagotribune.com${$(element).children("section").children("h3").children("a").attr("href")}`;
-            article.imageUrl = $(element).children("a").children("img").attr("data-baseurl");
-            article.text = $(element).children("section").children(".trb_outfit_group_list_item_brief").text();
-
-            db.Article.findOneAndUpdate(
-                { title: article.title },
-                article,
-                { upsert: true, new: true, runValidators: true })
-                .catch(error => {
-                    console.log(error);
-                    return res.status(500).send("Unable to insert article to database.");
-                });
-        });
-
-        res.send("Scrape Complete");
-    });
-});
-
-
 
 module.exports = router;
