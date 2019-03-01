@@ -1,6 +1,13 @@
 $(document).ready(function () {
     var favoritesLocalStorageName = "newsScrapperFavs";
 
+    //Compile the handlebar templates to be used later
+    var notesTemplate = $("#notesTemplate")[0].innerHTML;
+    var renderNotes = Handlebars.compile(notesTemplate);
+    var favoritesTemplate = $("#favoritesHandleBarsTemplate")[0].innerHTML;
+    var renderFavorites = Handlebars.compile(favoritesTemplate);
+
+    //Initailly hide the alert div
     var alertDiv = $("#errorAlert");
     alertDiv.hide();
 
@@ -18,21 +25,22 @@ $(document).ready(function () {
         }
     }
 
-    function addFavoriteArticleDiv(articleId) {
-        //Send a request to the api to get the article details and create the div for it on the screen
+
+    //Function that will refresh the favorite articles
+    function refreshFavoriteArticles() {
+        var currentFavorites = JSON.parse(localStorage.getItem(favoritesLocalStorageName));
         var favoriteContainer = $(".favoritesContainer");
+        favoriteContainer.empty();
 
-        $.ajax({
-            type: "GET",
-            url: `/api/articles/${articleId}`,
-            success: function (article) {
-
-                if (article) {
-                    var articleCardDiv = createFavoriteArticleCard(article);
-                    favoriteContainer.append(articleCardDiv);
+        if (currentFavorites && currentFavorites.length > 0) {
+            $.ajax({
+                type: "GET",
+                url: `/api/articles?ids=${currentFavorites.join(",")}`,
+                success: function (articles) {
+                    favoriteContainer.append(renderFavorites({ favoriteArticles: articles }));
                 }
-            }
-        });
+            });
+        }
     }
 
     //Find all current favorited articles and display them as such
@@ -44,8 +52,10 @@ $(document).ready(function () {
         if (currentFavorites) {
             currentFavorites.forEach(function (articleId) {
                 changeFavoriteIcon(articleId, true);
-                addFavoriteArticleDiv(articleId);
             });
+
+            //Refresh the favorite articles in the html
+            refreshFavoriteArticles();
         }
     }
 
@@ -69,30 +79,6 @@ $(document).ready(function () {
         }, 3000);
     }
 
-    //Function that creates the div that contains a specific note
-    function createNoteDiv(note, index) {
-
-        return $(`
-        <div data-note-id="${note._id}" class="noteContainer col-12 py-3 ${index !== 0 ? "border-top" : ""}">
-            <div class="row">
-                <div class="editNoteContainer px-2">
-                     <div class="noteEdit">
-                        <textarea data-note-id="${note._id}" class="noteTextArea form-control" rows="3" placeholder="Enter note text">${note.text}</textarea>
-                    </div>
-                </div>
-                <div class="noteButtonsContainer">
-                    <div class="mb-2 mr-2">
-                        <button data-note-id="${note._id}" ${note.text.trim() !== "" ? "" : "disabled"} class="noteSaveBtn btn btn-secondary btn-block"><i class="fas fa-save"></i> Save</button>
-                    </div>
-                    <div class="mr-2">
-                        <button data-note-id="${note._id}" class="noteDeleteBtn btn btn-danger btn-block ${note._id !== "-1" ? "" : "d-none"}"><i class="fas fa-times"></i> Delete</button>
-                        <button data-note-id="${note._id}" class="noteCancel btn btn-warning btn-block ${note._id !== "-1" ? "d-none" : ""}">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `);
-    }
 
     //Function that gets the notes for the current article and populates the notes modal
     function populateNotes(articleId) {
@@ -109,12 +95,11 @@ $(document).ready(function () {
                 var notesContainer = notesModal.find(".modal-body");
                 notesContainer.empty();
 
-                article.notes.forEach(function (note, index) {
-
-                    var noteDiv = createNoteDiv(note, index);
-
+                if (article.notes) {
+                    //Create a notes div from all the notes using the handlebars notes template
+                    var noteDiv = $(renderNotes({ notes: article.notes, isNewNote: false }));
                     notesContainer.append(noteDiv);
-                });
+                }
 
                 //Show the notes modal
                 notesModal.modal("show");
@@ -137,7 +122,7 @@ $(document).ready(function () {
 
         //Scroll to the bottom of the notes container so the newest note is displayed
         var notesContainer = $("#notesModal .modal-body");
-        notesContainer.animate({ scrollTop: $(document).height() });
+        notesContainer.animate({ scrollTop: $(".notesBody").height() });
     });
 
     //On input event for note text area
@@ -214,14 +199,15 @@ $(document).ready(function () {
             _id: "-1"
         };
 
-        var index = $(".noteContainer").length;
-        var noteDiv = createNoteDiv(newNote, index);
+        //Render the notes container div from the handlebars template
+        var noteDiv = $(renderNotes({ notes: [newNote], isNewNote: true }));
+
         notesContainer.append(noteDiv);
 
-        noteDiv.find(".noteTextArea").focus();
-
         //Scroll to the bottom of the notes container
-        notesContainer.animate({ scrollTop: $(document).height() }, "slow");
+        notesContainer.animate({ scrollTop: $(".notesBody").height() }, "slow", function() {
+            noteDiv.find(".noteTextArea").focus();
+        });
     });
 
     //On click event for the cancel add note button
@@ -245,20 +231,17 @@ $(document).ready(function () {
             currentFavorites = [];
         }
 
-        console.log(articleId);
-
         var index = currentFavorites.indexOf(articleId);
         if (index >= 0 && !makeFav) {
             currentFavorites.splice(index, 1);
-            //Remove the article from the favorites section
-            $(`.favoriteArticleCardContainer[data-article-id="${articleId}"]`).remove();
         } else if (index < 0 && makeFav) {
             currentFavorites.push(articleId);
-            //Add the article to the favorites section
-            addFavoriteArticleDiv(articleId);
         }
 
         localStorage.setItem(favoritesLocalStorageName, JSON.stringify(currentFavorites));
+
+        //Refresh the favorite articles section in the html
+        refreshFavoriteArticles();
     });
 
     //On click event when a user selects a link on the nav bar
@@ -292,34 +275,4 @@ $(document).ready(function () {
                 break;
         }
     });
-
-    //Function that creates a favorite article card
-    function createFavoriteArticleCard(article) {
-
-        return $(`
-        <div data-article-id="${article._id}" class="favoriteArticleCardContainer col-md-6 col-sm-12 p-2">
-            <div class="card articleCard shadowCard p-3">
-                <div class="row">
-                    <div class="col-12">
-                        <i data-article-id="${article._id}" class="favoriteIcon fas fa-heart fa-2x"></i>
-                        <img src="${article.imageUrl || "/assets/img/blankImage.jpg"}"
-                            alt="...">
-                    </div>
-                    <div class="col--12">
-                        <div class="card-body">
-                            <h3><a href="${article.link}"
-                                    target="_blank">${article.title}</a>
-                            </h3>
-                            <p class="card-text">${article.text}</p>
-                            <div class="articleButtonDiv">
-                                <button data-article-id="${article._id}"
-                                    class="btn btn-primary float-right viewNotesButton">View Notes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>`);
-    }
-
 });

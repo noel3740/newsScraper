@@ -75,3 +75,78 @@
         </div>
     </div>
 </section>
+
+<!--Favorites handlebars template-->
+<template id="favoritesHandleBarsTemplate">
+    \{{#each favoriteArticles}}
+    <div data-article-id="\{{this._id}}" class="favoriteArticleCardContainer col-md-6 col-sm-12 p-2">
+        <div class="card articleCard shadowCard p-3">
+            <div class="row">
+                <div class="col-12">
+                    <i data-article-id="\{{this._id}}" class="favoriteIcon fas fa-heart fa-2x"></i>
+                    \{{#if this.imageUrl}}
+                    <img src="\{{this.imageUrl}}" alt="...">
+                    \{{else}}
+                    <img src="/assets/img/blankImage.jpg" alt="...">
+                    \{{/if}}
+                </div>
+                <div class="col-12">
+                    <div class="card-body">
+                        <h3><a href="\{{this._id}}" target="_blank">\{{this.title}}</a>
+                        </h3>
+                        <p class="card-text">\{{this.text}}</p>
+                        <div class="articleButtonDiv">
+                            <button data-article-id="\{{this._id}}"
+                                class="btn btn-primary float-right viewNotesButton">View Notes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    \{{/each}}
+</template>
+
+
+<!--Notes handlebars template-->
+<template id="notesTemplate">
+    <div data-is-new-note="\{{isNewNote}}">
+        \{{#each notes}}
+        <div data-note-id="\{{this._id}}" class="noteContainer col-12 py-3 
+        \{{#if @first}} 
+        border-top 
+        \{{/if}}">
+            <div class="row">
+                <div class="editNoteContainer px-2">
+                    <div class="noteEdit">
+                        <textarea data-note-id="\{{this._id}}" class="noteTextArea form-control" rows="3"
+                            placeholder="Enter note text">\{{this.text}}</textarea>
+                    </div>
+                </div>
+                <div class="noteButtonsContainer">
+                    <div class="mb-2 mr-2">
+                        \{{#with this.text}}
+                        <button data-note-id="\{{this._id}}"
+                            class="noteSaveBtn btn btn-secondary btn-block"><i class="fas fa-save"></i> Save</button>
+                        \{{else}}
+                        <button disabled data-note-id="\{{this._id}}"
+                            class="noteSaveBtn btn btn-secondary btn-block"><i class="fas fa-save"></i> Save</button>
+                        \{{/with}}
+                    </div>
+                    <div class="mr-2">
+                        <button data-note-id="\{{this._id}}" class="noteDeleteBtn btn btn-danger btn-block 
+                        \{{#if ../isNewNote }}
+                        d-none
+                        \{{/if}}">
+                            <i class="fas fa-times"></i> Delete</button>
+                        <button data-note-id="\{{this._id}}" class="noteCancel btn btn-warning btn-block 
+                        \{{#unless ../isNewNote }}
+                        d-none
+                        \{{/unless}}">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        \{{/each}}
+    </div>
+</template>
