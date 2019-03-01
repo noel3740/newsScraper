@@ -37,7 +37,7 @@ router.get("/", (req, res) => {
     const websiteToScrape = "https://www.chicagotribune.com/news/";
     axios.get(websiteToScrape).then(axiosResponse => {
         //Parse data returned from axios using cherrio
-        var $ = cheerio.load(axiosResponse.data);
+        const $ = cheerio.load(axiosResponse.data);
 
         const articles = [];
 

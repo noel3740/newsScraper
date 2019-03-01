@@ -7,7 +7,7 @@ const exphbs = require("express-handlebars");
 const PORT = process.env.PORT || 3000;
 
 // Initialize Express
-var app = express();
+const app = express();
 
 //Use url encode and json middlewares
 app.use(express.urlencoded({ extended: true }));
