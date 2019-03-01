@@ -21,20 +21,20 @@ $(document).ready(function () {
     //Function that creates the div that contains a specific note
     function createNoteDiv(note, index) {
         return $(`
-        <div data-note-id=${note._id} class="noteContainer col-12 py-3 ${index !== 0 ? "border-top" : ""}">
+        <div data-note-id="${note._id}" class="noteContainer col-12 py-3 ${index !== 0 ? "border-top" : ""}">
             <div class="row">
                 <div class="editNoteContainer px-2">
                      <div class="noteEdit">
-                        <textarea data-note-id=${note._id} class="noteTextArea form-control" rows="3" placeholder="Enter note text">${note.text}</textarea>
+                        <textarea data-note-id="${note._id}" class="noteTextArea form-control" rows="3" placeholder="Enter note text">${note.text}</textarea>
                     </div>
                 </div>
                 <div class="noteButtonsContainer">
                     <div class="mb-2 mr-2">
-                        <button data-note-id=${note._id} ${note.text.trim() !== "" ? "" : "disabled"} class="noteSaveBtn btn btn-secondary btn-block"><i class="fas fa-save"></i> Save</button>
+                        <button data-note-id="${note._id}" ${note.text.trim() !== "" ? "" : "disabled"} class="noteSaveBtn btn btn-secondary btn-block"><i class="fas fa-save"></i> Save</button>
                     </div>
                     <div class="mr-2">
-                        <button data-note-id=${note._id} class="noteDeleteBtn btn btn-secondary btn-block ${note._id !== -1 ? "" : "d-none"}"><i class="fas fa-times"></i> Delete</button>
-                        <button data-note-id=${note._id} class="noteCancel btn btn-secondary btn-block ${note._id !== -1 ? "d-none" : ""}">Cancel</button>
+                        <button data-note-id="${note._id}" class="noteDeleteBtn btn btn-danger btn-block ${note._id !== "-1" ? "" : "d-none"}"><i class="fas fa-times"></i> Delete</button>
+                        <button data-note-id="${note._id}" class="noteCancel btn btn-warning btn-block ${note._id !== "-1" ? "d-none" : ""}">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -102,12 +102,12 @@ $(document).ready(function () {
     //On click event for note save button
     $(document).on("click", ".noteSaveBtn", function () {
         var articleId = $("#notesModal").data("article-id");
-        var noteId = parseInt($(this).data("note-id"));
-        var httpMethod = noteId !== -1 ? "PUT" : "POST";
-        var apiUrl = noteId !== -1 ? `/api/notes/${noteId}` : `/api/articles/${articleId}/notes`;
+        var noteId = $(this).data("note-id").toString();
+        var httpMethod = noteId !== "-1" ? "PUT" : "POST";
+        var apiUrl = noteId !== "-1" ? `/api/notes/${noteId}` : `/api/articles/${articleId}/notes`;
 
         const note = {
-            text: $(`.noteTextArea[data-note-id=${noteId}]`).val()
+            text: $(`.noteTextArea[data-note-id="${noteId}"]`).val()
         };
 
         $.ajax({
@@ -159,7 +159,7 @@ $(document).ready(function () {
 
         var newNote = {
             text: "",
-            _id: -1
+            _id: "-1"
         };
 
         var index = $(".noteContainer").length;
