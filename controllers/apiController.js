@@ -7,9 +7,18 @@ const db = require("../models");
 //Initialize the express router
 const router = express.Router();
 
-//Router to get top 20 articles
+//Router to get articles
 router.get("/articles", (req, res) => {
-    db.Article.find()
+    let query = {};
+    const queryIds = req.query.ids;
+    if (queryIds && queryIds.length > 0) {
+        query = {
+            _id: queryIds.split(",")
+        };
+    }
+
+    db.Article.find(query)
+        .populate("notes")
         .then(dbArticles => {
             res.json(dbArticles);
         })
