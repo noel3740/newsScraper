@@ -264,6 +264,8 @@ $(document).ready(function () {
     //On click event when a user selects a link on the nav bar
     $(".navbar a").on("click", function () {
         var linkPointer = $(this).data("link-pointer");
+
+        //Make the appropriate link display as active on the nav bar
         $(".nav-item").removeClass("active");
         if ($(this).hasClass("navbar-brand")) {
             $(`.nav-link[data-link-pointer="home"]`).parent().addClass("active");
@@ -271,7 +273,13 @@ $(document).ready(function () {
             $(this).parent().addClass("active");
         }
 
+        //If hamburger menu is displayed then hide the drop down menu
+        var isHamburgerDisplayed = $(".navbar-toggler").css("display") === "block" ? true : false;
+        if (isHamburgerDisplayed) {
+            $(".navbar-collapse").removeClass("show");
+        }
 
+        //Show or hide sections depending on what nav link was clicked
         switch (linkPointer) {
             case "home":
             default:
