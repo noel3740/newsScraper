@@ -21,7 +21,7 @@ $(document).ready(function () {
     //Function that creates the div that contains a specific note
     function createNoteDiv(note, index) {
         return $(`
-        <div data-note-id=${note._id} class="noteContainer col-12 py-4 ${index !== 0 ? "border-top" : ""}">
+        <div data-note-id=${note._id} class="noteContainer col-12 py-3 ${index !== 0 ? "border-top" : ""}">
             <div class="row">
                 <div class="editNoteContainer px-2">
                      <div class="noteEdit">
@@ -82,6 +82,10 @@ $(document).ready(function () {
 
         //Populate the screen with all the notes for the current article
         populateNotes(articleId);
+
+        //Scroll to the bottom of the notes container so the newest note is displayed
+        var notesContainer = $("#notesModal .modal-body");
+        notesContainer.animate({ scrollTop: $(document).height() });
     });
 
     //On input event for note text area
@@ -149,7 +153,7 @@ $(document).ready(function () {
     $("#addNoteButton").on("click", function () {
         //Disable the add button until they hit save on that new note
         $(this).prop("disabled", true);
-
+        
         var notesModal = $("#notesModal");
         var notesContainer = notesModal.find(".modal-body");
 
