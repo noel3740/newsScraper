@@ -77,3 +77,11 @@
   .noteButtonsContainer {
       width: 100px;
   }
+
+  .favoriteIcon {
+      position: absolute;
+      top: 0;
+      left: 16px;
+      color:red;
+      cursor: pointer;
+  }

@@ -1,7 +1,36 @@
 $(document).ready(function () {
+    var favoritesLocalStorageName = "newsScrapperFavs";
+
     var alertDiv = $("#errorAlert");
     alertDiv.hide();
 
+    //function that changes the favorite icon on a particular article
+    function changeFavoriteIcon(articleId, makeFav) {
+        var favoriteIcon = $(`.favoriteIcon[data-article-id="${articleId}"]`);
+
+        if (favoriteIcon) {
+            //Toggle between full heart icon and empty heart icon
+            if (makeFav) {
+                favoriteIcon.removeClass("far").addClass("fas");
+            } else {
+                favoriteIcon.removeClass("fas").addClass("far");
+            }
+        }
+    }
+
+    //Find all current favorited articles and display them as such
+    function checkFavorites() {
+        var currentFavorites = JSON.parse(localStorage.getItem(favoritesLocalStorageName));
+
+        currentFavorites.forEach(function(articleId) {
+            changeFavoriteIcon(articleId, true);
+        });
+    }
+
+    //Run the check favorites function to make the favorite icon full or not initially
+    checkFavorites();
+
+    //Function to display alert message to user
     function displayMessage(message, isError) {
 
         alertDiv.removeClass("alert-danger alert-success");
@@ -20,6 +49,7 @@ $(document).ready(function () {
 
     //Function that creates the div that contains a specific note
     function createNoteDiv(note, index) {
+
         return $(`
         <div data-note-id="${note._id}" class="noteContainer col-12 py-3 ${index !== 0 ? "border-top" : ""}">
             <div class="row">
@@ -153,7 +183,7 @@ $(document).ready(function () {
     $("#addNoteButton").on("click", function () {
         //Disable the add button until they hit save on that new note
         $(this).prop("disabled", true);
-        
+
         var notesModal = $("#notesModal");
         var notesContainer = notesModal.find(".modal-body");
 
@@ -173,9 +203,34 @@ $(document).ready(function () {
     });
 
     //On click event for the cancel add note button
-    $(document).on("click", ".noteCancel", function() {
+    $(document).on("click", ".noteCancel", function () {
         var articleId = $("#notesModal").data("article-id");
         populateNotes(articleId);
+    });
+
+    //On click even for the favorite icon
+    $(".favoriteIcon").on("click", function () {
+
+        //Toggle between full heart icon and empty heart icon
+        var makeFav = $(this).hasClass("far");
+        var articleId = $(this).data("article-id");
+
+        changeFavoriteIcon(articleId, makeFav);
+
+        //Add or remove articleId from the local storage
+        var currentFavorites = JSON.parse(localStorage.getItem(favoritesLocalStorageName));
+        if (!currentFavorites) {
+            currentFavorites = [];
+        }
+
+        var index = currentFavorites.indexOf(articleId);
+        if (index >= 0 && !makeFav) {
+            currentFavorites.splice(index, 1);
+        } else if (index < 0 && makeFav) {
+            currentFavorites.push(articleId);
+        }
+
+        localStorage.setItem(favoritesLocalStorageName, JSON.stringify(currentFavorites));
     });
 
 });
