@@ -41,10 +41,12 @@ $(document).ready(function () {
         var favoriteContainer = $(".favoritesContainer");
         favoriteContainer.empty();
 
-        currentFavorites.forEach(function (articleId) {
-            changeFavoriteIcon(articleId, true);
-            addFavoriteArticleDiv(articleId);
-        });
+        if (currentFavorites) {
+            currentFavorites.forEach(function (articleId) {
+                changeFavoriteIcon(articleId, true);
+                addFavoriteArticleDiv(articleId);
+            });
+        }
     }
 
     //Run the check favorites function to make the favorite icon full or not initially
@@ -268,18 +270,18 @@ $(document).ready(function () {
         } else {
             $(this).parent().addClass("active");
         }
-        
+
 
         switch (linkPointer) {
-        case "home":
-        default:
-            $("#homeSection").show();
-            $("#favoritesSection").hide();
-            break;
-        case "favorites":
-            $("#homeSection").hide();
-            $("#favoritesSection").show();
-            break;
+            case "home":
+            default:
+                $("#homeSection").show();
+                $("#favoritesSection").hide();
+                break;
+            case "favorites":
+                $("#homeSection").hide();
+                $("#favoritesSection").show();
+                break;
         }
     });
 
