@@ -4,12 +4,36 @@ $(document).ready(function () {
     //Compile the handlebar templates to be used later
     var notesTemplate = $("#notesTemplate")[0].innerHTML;
     var renderNotes = Handlebars.compile(notesTemplate);
-    var favoritesTemplate = $("#favoritesHandleBarsTemplate")[0].innerHTML;
-    var renderFavorites = Handlebars.compile(favoritesTemplate);
+    var articlesTemplate = $("#articlesHandleBarsTemplate")[0].innerHTML;
+    var renderArticles = Handlebars.compile(articlesTemplate);
 
-    //Initailly hide the alert div
+    //Initially hide the alert div
     var alertDiv = $("#errorAlert");
     alertDiv.hide();
+
+    //Initially hide the favorites section
+    $("#favoritesSection").hide();
+
+    //Get top articles to display on screen
+    function displayArticles() {
+        var articlesContainer = $(".articlesDiv");
+        articlesContainer.empty();
+
+        $.ajax({
+            type: "GET",
+            url: `/api/articles?limit=20`,
+            success: function (articles) {
+                var articleCards = renderArticles({ articles: articles });
+                articlesContainer.append(articleCards);
+            },
+            error: function (error) {
+                console.log(error);
+                displayMessage("An error occured getting articles from the database!", true);
+            }
+        });
+    }
+
+    displayArticles();
 
     //function that changes the favorite icon on a particular article
     function changeFavoriteIcon(articleId, makeFav) {
@@ -37,7 +61,7 @@ $(document).ready(function () {
                 type: "GET",
                 url: `/api/articles?ids=${currentFavorites.join(",")}`,
                 success: function (articles) {
-                    favoriteContainer.append(renderFavorites({ favoriteArticles: articles }));
+                    favoriteContainer.append(renderArticles({ articles: articles, isFavorites: true }));
                 }
             });
         }

@@ -6,38 +6,7 @@
     </header>
 
     <section class="container">
-        <div class="row articlesDiv">
-            {{#each articles}}
-            <div class="col-12">
-                <div class="card articleCard">
-                    <div class="row">
-                        <div class="col-lg-3 col-md-12 mt-4">
-                            <i data-article-id="{{this._id}}" class="favoriteIcon far fa-heart fa-2x"></i>
-                            {{#if this.imageUrl}}
-                            <img src="{{this.imageUrl}}" alt="...">
-                            {{else}}
-                            <img src="/assets/img/blankImage.jpg" alt="...">
-                            {{/if}}
-                        </div>
-                        <div class="col-lg-9 col-md-12">
-                            <div class="card-body">
-                                <h3><a href="{{this.link}}" target="_blank">{{this.title}}</a>
-                                </h3>
-                                <p class="card-text">{{this.text}}</p>
-                                <div class="articleButtonDiv">
-                                    <button data-article-id="{{this._id}}"
-                                        class="btn btn-primary float-right viewNotesButton">View Notes</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{#unless @last}}
-            <hr class="w-100">
-            {{/unless}}
-            {{/each}}
-        </div>
+        <div class="row articlesDiv"></div>
     </section>
 </main>
 
@@ -76,14 +45,14 @@
     </div>
 </section>
 
-<!--Favorites handlebars template-->
-<template id="favoritesHandleBarsTemplate">
-    \{{#each favoriteArticles}}
+<!--Articles handlebars template-->
+<template id="articlesHandleBarsTemplate">
+    \{{#each articles}}
     <div data-article-id="\{{this._id}}" class="favoriteArticleCardContainer col-md-6 col-sm-12 p-2">
         <div class="card articleCard shadowCard p-3">
             <div class="row">
                 <div class="col-12">
-                    <i data-article-id="\{{this._id}}" class="favoriteIcon fas fa-heart fa-2x"></i>
+                    <i data-article-id="\{{this._id}}" class="favoriteIcon \{{#if ../isFavorites}} fas \{{else}} far \{{/if}} fa-heart fa-2x"></i>
                     \{{#if this.imageUrl}}
                     <img src="\{{this.imageUrl}}" alt="...">
                     \{{else}}
