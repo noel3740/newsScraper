@@ -15,10 +15,11 @@ const insertAllArticlesPromise = articles => {
 
     return new Promise((resolve, reject) => {
         articles.forEach((article, index) => {
+
             db.Article.findOneAndUpdate(
                 { title: article.title },
                 article,
-                { upsert: true, new: true, runValidators: true })
+                { upsert: true, setDefaultsOnInsert: true })
                 .then(() => {
                     if (index === (articles.length - 1)) {
                         resolve();
@@ -48,7 +49,6 @@ router.get("/", (req, res) => {
             article.link = `https://www.chicagotribune.com${$(element).children("section").children("h3").children("a").attr("href")}`;
             article.imageUrl = $(element).children("a").children("img").attr("data-baseurl");
             article.text = $(element).children("section").children(".trb_outfit_group_list_item_brief").text();
-            article.createdAt = new Date();
 
             articles.push(article);
         });
