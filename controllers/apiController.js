@@ -11,6 +11,7 @@ const router = express.Router();
 router.get("/articles", (req, res) => {
     let query = {};
     const queryIds = req.query.ids;
+    const limit = parseInt(req.query.limit) || 0;
     if (queryIds && queryIds.length > 0) {
         query = {
             _id: queryIds.split(",")
@@ -18,6 +19,8 @@ router.get("/articles", (req, res) => {
     }
 
     db.Article.find(query)
+        .limit(limit)
+        .sort({ createdAt: -1 })
         .populate("notes")
         .then(dbArticles => {
             res.json(dbArticles);
@@ -98,7 +101,7 @@ router.put("/notes/:id", (req, res) => {
         text: req.body.text
     };
 
-    db.Note.updateOne({ _id: req.params.id}, { $set: updatedNote })
+    db.Note.updateOne({ _id: req.params.id }, { $set: updatedNote })
         .then(result => {
             console.log(result);
             res.end();
