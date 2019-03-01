@@ -16,12 +16,34 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <!--Custom stylesheet-->
     <link rel="stylesheet" href="/assets/css/style.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 </head>
 
 <body>
     <section id="errorAlert" class="alert alert-danger alert-dismissible text-center" role="alert"></section>
-    
+
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-secondary">
+        <a class="navbar-brand" data-link-pointer="home" href="#">
+            <img src="/assets/img/favIcon2.png" width="30" height="30" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" data-link-pointer="home" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-link-pointer="favorites" href="#">Favorites</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     {{{ body }}}
 </body>
 <script src="/assets/js/app.js"></script>

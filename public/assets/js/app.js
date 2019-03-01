@@ -18,12 +18,32 @@ $(document).ready(function () {
         }
     }
 
+    function addFavoriteArticleDiv(articleId) {
+        //Send a request to the api to get the article details and create the div for it on the screen
+        var favoriteContainer = $(".favoritesContainer");
+
+        $.ajax({
+            type: "GET",
+            url: `/api/articles/${articleId}`,
+            success: function (article) {
+
+                if (article) {
+                    var articleCardDiv = createFavoriteArticleCard(article);
+                    favoriteContainer.append(articleCardDiv);
+                }
+            }
+        });
+    }
+
     //Find all current favorited articles and display them as such
     function checkFavorites() {
         var currentFavorites = JSON.parse(localStorage.getItem(favoritesLocalStorageName));
+        var favoriteContainer = $(".favoritesContainer");
+        favoriteContainer.empty();
 
-        currentFavorites.forEach(function(articleId) {
+        currentFavorites.forEach(function (articleId) {
             changeFavoriteIcon(articleId, true);
+            addFavoriteArticleDiv(articleId);
         });
     }
 
@@ -209,7 +229,7 @@ $(document).ready(function () {
     });
 
     //On click even for the favorite icon
-    $(".favoriteIcon").on("click", function () {
+    $(document).on("click", ".favoriteIcon", function () {
 
         //Toggle between full heart icon and empty heart icon
         var makeFav = $(this).hasClass("far");
@@ -223,14 +243,73 @@ $(document).ready(function () {
             currentFavorites = [];
         }
 
+        console.log(articleId);
+
         var index = currentFavorites.indexOf(articleId);
         if (index >= 0 && !makeFav) {
             currentFavorites.splice(index, 1);
+            //Remove the article from the favorites section
+            $(`.favoriteArticleCardContainer[data-article-id="${articleId}"]`).remove();
         } else if (index < 0 && makeFav) {
             currentFavorites.push(articleId);
+            //Add the article to the favorites section
+            addFavoriteArticleDiv(articleId);
         }
 
         localStorage.setItem(favoritesLocalStorageName, JSON.stringify(currentFavorites));
     });
+
+    //On click event when a user selects a link on the nav bar
+    $(".navbar a").on("click", function () {
+        var linkPointer = $(this).data("link-pointer");
+        $(".nav-item").removeClass("active");
+        if ($(this).hasClass("navbar-brand")) {
+            $(`.nav-link[data-link-pointer="home"]`).parent().addClass("active");
+        } else {
+            $(this).parent().addClass("active");
+        }
+        
+
+        switch (linkPointer) {
+        case "home":
+        default:
+            $("#homeSection").show();
+            $("#favoritesSection").hide();
+            break;
+        case "favorites":
+            $("#homeSection").hide();
+            $("#favoritesSection").show();
+            break;
+        }
+    });
+
+    //Function that creates a favorite article card
+    function createFavoriteArticleCard(article) {
+
+        return $(`
+        <div data-article-id="${article._id}" class="favoriteArticleCardContainer col-md-6 col-sm-12 p-2">
+            <div class="card articleCard shadowCard p-3">
+                <div class="row">
+                    <div class="col-12">
+                        <i data-article-id="${article._id}" class="favoriteIcon fas fa-heart fa-2x"></i>
+                        <img src="${article.imageUrl || "/assets/img/blankImage.jpg"}"
+                            alt="...">
+                    </div>
+                    <div class="col--12">
+                        <div class="card-body">
+                            <h3><a href="${article.link}"
+                                    target="_blank">${article.title}</a>
+                            </h3>
+                            <p class="card-text">${article.text}</p>
+                            <div class="articleButtonDiv">
+                                <button data-article-id="${article._id}"
+                                    class="btn btn-primary float-right viewNotesButton">View Notes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`);
+    }
 
 });
