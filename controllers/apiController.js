@@ -103,7 +103,6 @@ router.put("/notes/:id", (req, res) => {
 
     db.Note.updateOne({ _id: req.params.id }, { $set: updatedNote })
         .then(result => {
-            console.log(result);
             res.end();
         })
         .catch(error => {
