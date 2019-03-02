@@ -95,11 +95,9 @@
                 <div class="noteButtonsContainer">
                     <div class="mb-2 mr-2">
                         \{{#with this.text}}
-                        <button data-note-id="\{{this._id}}"
-                            class="noteSaveBtn btn btn-secondary btn-block"><i class="fas fa-save"></i> Save</button>
+                        <button data-note-id="\{{../_id}}" class="noteSaveBtn btn btn-secondary btn-block"><i class="fas fa-save"></i> Save</button>
                         \{{else}}
-                        <button disabled data-note-id="\{{this._id}}"
-                            class="noteSaveBtn btn btn-secondary btn-block"><i class="fas fa-save"></i> Save</button>
+                        <button data-note-id="\{{_id}}" class="noteSaveBtn btn btn-secondary btn-block" disabled="disabled" ><i class="fas fa-save"></i> Save</button>
                         \{{/with}}
                     </div>
                     <div class="mr-2">
