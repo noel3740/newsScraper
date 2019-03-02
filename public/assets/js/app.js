@@ -15,7 +15,7 @@ $(document).ready(function () {
     $("#favoritesSection").hide();
 
     //Get top articles to display on screen
-    function displayArticles() {
+    function refreshArticles() {
         var articlesContainer = $(".articlesDiv");
         articlesContainer.empty();
 
@@ -25,6 +25,7 @@ $(document).ready(function () {
             success: function (articles) {
                 var articleCards = renderArticles({ articles: articles });
                 articlesContainer.append(articleCards);
+                checkFavorites();
             },
             error: function (error) {
                 console.log(error);
@@ -33,7 +34,8 @@ $(document).ready(function () {
         });
     }
 
-    displayArticles();
+    refreshArticles();
+    refreshFavoriteArticles();
 
     //function that changes the favorite icon on a particular article
     function changeFavoriteIcon(articleId, makeFav) {
@@ -70,21 +72,13 @@ $(document).ready(function () {
     //Find all current favorited articles and display them as such
     function checkFavorites() {
         var currentFavorites = JSON.parse(localStorage.getItem(favoritesLocalStorageName));
-        var favoriteContainer = $(".favoritesContainer");
-        favoriteContainer.empty();
 
         if (currentFavorites) {
             currentFavorites.forEach(function (articleId) {
                 changeFavoriteIcon(articleId, true);
-            });
-
-            //Refresh the favorite articles in the html
-            refreshFavoriteArticles();
+            });            
         }
     }
-
-    //Run the check favorites function to make the favorite icon full or not initially
-    checkFavorites();
 
     //Function to display alert message to user
     function displayMessage(message, isError) {
