@@ -13,6 +13,10 @@ const router = express.Router();
 const insertAllArticlesPromise = articles => {
 
     return new Promise((resolve, reject) => {
+        if (articles.length === 0) {
+            resolve();
+        }
+
         articles.forEach((article, index) => {
 
             db.Article.findOneAndUpdate(
